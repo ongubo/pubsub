@@ -1,0 +1,41 @@
+version: '3'
+services: 
+    publisher:
+        # build: ./src
+        build:
+          context: ./pub
+          dockerfile: ../Dockerfile
+        image: publisher
+        container_name: publisher-app
+        ports:
+            - "8000:8000"
+        restart: unless-stopped
+        working_dir: /var/www/html/
+        volumes:
+          - ./:/var/www/html
+        command: php pub/artisan serve --host=0.0.0.0 --port=8000
+        stdin_open: true
+        tty: true 
+        networks: 
+            - pubsub
+    subscriber:
+        # build: ./src
+        build:
+          context: ./sub
+          dockerfile: ../Dockerfile
+        image: subscriber
+        container_name: subscriber-app
+        ports:
+            - "9000:9000"
+        restart: unless-stopped
+        working_dir: /var/www/html/sub
+        volumes:
+          - ./:/var/www/html/sub
+        command: php sub/artisan --host=0.0.0.0 serve --port=9000
+        stdin_open: true
+        tty: true 
+        networks: 
+            - pubsub
+networks:
+    pubsub:
+      driver: bridge
