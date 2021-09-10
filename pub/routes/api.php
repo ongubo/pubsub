@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PubController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +15,5 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('/publish/{topic}', [PubController::class, 'topic']);
 
-Route::post('publish/topic1', function(Request $request) {
-    return Article::create($request->all);
-});
